@@ -19,3 +19,7 @@ app.get('/', (req, res) => {
     res.render('ind.ejs');
     console.log("Website loaded succesfully");
 })
+
+app.post('/submit', (req, res)=>{
+    console.log("buttonworks");
+})
