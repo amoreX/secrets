@@ -55,18 +55,76 @@
                 display:flex;
                 gap:40px;
             }
+            #bgVideo {
+                position: fixed;
+                right: 0;
+                bottom: 0;
+                min-width: 100%;
+                min-height: 100%;
+                width: auto;
+                height: auto;
+                z-index: -1;
+                transform:scale(1.05);
+                filter: blur(4px); /* Add a blur effect, adjust the value to control the blur intensity */
+                opacity: 1; /* Adjust the opacity value (0.0 to 1.0) to control transparency */
+                transition: filter 1.5s, opacity 2.9s; /* Add transitions for a smooth effect */
+            }
+            html, body {
+                height: 100%;
+                overflow: hidden;
+                margin: 0;
+                outline:none;
+            }
+            .secrets{
+                display:flex;
+                justify-content: center;
+                color:rgba(167, 161, 161, 0.527);
+                z-index: 9;
+                gap:20px;
+                font:700 20px Atkinson Hyperlegible, Roboto, Helvetica, sans-serif;
+                animation: glow 4s infinite linear;
+            }
+            @keyframes glow{
+                0%{
+                    color:rgba(108, 101, 101, 0.527);
+                }
+                25%{
+                    color:rgba(197, 194, 194, 0.722);
+                }
+                50%{
+                    color:rgb(255, 255, 255);
+                }
+                75%{
+                    color:rgba(186, 183, 183, 0.722);
+                }
+                100%{
+                    color:rgba(108, 101, 101, 0.527);
+                }
+            }
             
         </style>
     </head>
 
     <body>
+        <video autoplay muted loop id="bgvideo">
+            <source src="https://cdn.discordapp.com/attachments/1181225884825419787/1192936033529102496/darkbg.mp4?ex=65aae342&is=65986e42&hm=daa894245bd1fc91bded5d1e64c0be45be416b63b6b4e6a8a3976dfe1f6a783f&" type="video/mp4" >
+        </video>
         <div class="container">
-            <form action="/gen" class="form1" method="POST">
-                <input type="submit" value="Generate" id="button" class="add-button">
-            </form>
+            <div class="secrets">
+                <p>S</p>
+                <p>E</p>
+                <p>C</p>
+                <p>R</p>
+                <p>E</p>
+                <p>T</p>
+                <p>S</p>
+            </div>
             <form action="/submit" class="form" method="POST">
                 <input type="text" name="secret"id="secret" class="inn"value="<%=rees%>" >
                 <input type="submit" value="Add" id="button" class="add-button">
+            </form>
+            <form action="/gen" class="form1" method="POST">
+                <input type="submit" value="Generate" id="button" class="add-button">
             </form>
         </div>
     </body>
