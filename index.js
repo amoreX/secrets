@@ -5,13 +5,13 @@ import { fileURLToPath } from 'url';
 import axios from 'axios';
 import mongoose from 'mongoose'; 
 import { MongoClient, ServerApiVersion } from 'mongodb';  
-
+import cors from 'cors';
 const app = express();
 const port = 3000;
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const password = encodeURIComponent("mdnihalrahman@2005");
 let uri = "mongodb+srv://nihal:" + password + "@cluster0.yw0ab49.mongodb.net/secretsforall?retryWrites=true&w=majority";
-
+app.use(cors())
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -47,7 +47,7 @@ app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended: true}));
 app.set('view engine', 'ejs');     
 
-app.listen(port, ()=>{
+app.listen(process.env.PORT || port, ()=>{
     console.log(`listening on port ${port}`);
 })
 
