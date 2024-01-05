@@ -55,11 +55,7 @@
                 display:flex;
                 gap:40px;
             }
-            .form1{
-                position:absolute;
-                top:47.5%;
-                left:27%;
-            }
+            
         </style>
     </head>
 
@@ -69,7 +65,7 @@
                 <input type="submit" value="Generate" id="button" class="add-button">
             </form>
             <form action="/submit" class="form" method="POST">
-                <input type="text" name="secret"id="secret" class="inn"value="<%= locals.randomSecret || '' %>" >
+                <input type="text" name="secret"id="secret" class="inn"value="<%=rees%>" >
                 <input type="submit" value="Add" id="button" class="add-button">
             </form>
         </div>

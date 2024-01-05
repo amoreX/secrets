@@ -4,20 +4,46 @@ import {dirname} from 'path';
 import { fileURLToPath } from 'url';
 import axios from 'axios';
 import mongoose from 'mongoose'; 
+import { MongoClient, ServerApiVersion } from 'mongodb';  
 
 const app = express();
 const port = 3000;
 const __dirname = dirname(fileURLToPath(import.meta.url));
+const password = encodeURIComponent("mdnihalrahman@2005");
+let uri = "mongodb+srv://nihal:" + password + "@cluster0.yw0ab49.mongodb.net/secretsforall?retryWrites=true&w=majority";
 
-mongoose.connect('mongodb://localhost:27017/secret', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
+const client = new MongoClient(uri, {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  },
 });
-const SecretModel = mongoose.model('Secret', {      //defiens the model according to whch the data inptted will be stored
-    secret: String,
-  });
 
-app.use(express.static('public'));
+async function connectToDatabase() {      //basically checks connection
+  try {
+    await client.connect();
+    console.log('Connected to MongoDB Atlas');
+  } catch (error) {
+    console.error('Error connecting to MongoDB Atlas:', error);
+  }
+}
+
+connectToDatabase();
+
+
+// const SecretSchema = new mongoose.Schema({     
+//     name:{
+//       type:String,
+//       required:true,      // lode ka documenntation
+//       trim:true,
+//     }
+//   });
+
+// const Secret = mongoose.model('secrets',SecretSchema);
+
+
+app.use(express.static('public')); 
 app.use(bodyParser.urlencoded({extended: true}));
 app.set('view engine', 'ejs');     
 
@@ -26,23 +52,27 @@ app.listen(port, ()=>{
 })
 
 app.get('/', (req, res) => {
-    res.render('ind.ejs');
+    res.render('ind.ejs',{rees:" "});
     console.log("Website loaded succesfully");
 })
 
 app.post('/submit', async(req, res)=>{
-    console.log("buttonworks");
-    const { secret } = req.body;     //stores the input body in secret
+  
+  const secretgiven = req.body['secret'];
+  try {
+    // await Secret.create({ name: secretgiven });
+    const result = await client.db().collection('secrets').insertOne({ name: secretgiven });
 
-  // Create a new document using the mongoose model
-  const newSecret = new SecretModel({secret,});        //newsecret stores the document which is modeleed above and t's a concise way to define an object where the property name and the variable name are the same
-    await newSecret.save();
-    console.log('Secret added successfully');
+    console.log('Secret saved successfully.');
     res.redirect('/');
-
+  } catch (error) {
+    console.error('Error saving secret:', error);
+    res.status(500).send('Internal Server Error');
+  }
 })
+
 app.post('/gen', async(req, res)=>{
-    const randomSecret = await SecretModel.aggregate([{ $sample: { size: 1 } }]);
-    res.locals.randomSecret = randomSecret[0].secret;
-    res.render('ind.ejs');
+    const randomSecret = await client.db().collection('secrets').aggregate([{ $sample: { size: 1 } }]).toArray();
+    let ss = randomSecret[0].name;
+    res.render('ind.ejs',{rees:ss});
 })
