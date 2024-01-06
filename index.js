@@ -70,9 +70,14 @@ app.post('/submit', async(req, res)=>{
     res.status(500).send('Internal Server Error');
   }
 })
-
+let ssold="me"
 app.post('/gen', async(req, res)=>{
-    const randomSecret = await client.db().collection('secrets').aggregate([{ $sample: { size: 1 } }]).toArray();
+    let randomSecret = await client.db().collection('secrets').aggregate([{ $sample: { size: 1 } }]).toArray();
     let ss = randomSecret[0].name;
+    if (ss==ssold){
+      randomSecret = await client.db().collection('secrets').aggregate([{ $sample: { size: 1 } }]).toArray();
+      ss = randomSecret[0].name;
+    }
     res.render('ind.ejs',{rees:ss});
+    ssold=ss;
 })
